@@ -1,18 +1,20 @@
 import { categories, generateCards, generateCategory } from './main.js'
 
+const menu = document.querySelector('.menu')
+
 export function addNav() {
-  const menu = document.querySelector('.menu')
   const menu_list = document.querySelector('.menu-list')
   const burger_icon = document.querySelector('.burger-icon')
+  burger_icon.src = '../data/img/burger-icon.png'
   const menu_item_main = document.createElement('li')
   menu_item_main.textContent = 'Main page'
   menu_item_main.classList.add('menu_item_main', 'menu-item')
   menu_list.append(menu_item_main)
 
-  categories.forEach((el) => {
+  categories.forEach((category) => {
     const menu_item = document.createElement('li')
-    menu_item.classList.add('menu-item')
-    menu_item.textContent = el
+    menu_item.className = 'menu-item'
+    menu_item.textContent = category
     menu_list.append(menu_item)
   })
 
@@ -32,8 +34,17 @@ export function addNav() {
   })
 
   burger_icon.addEventListener('click', menuToggle)
-
-  function menuToggle() {
-    menu.classList.toggle('menu-active')
-  }
 }
+
+function menuToggle() {
+  menu.classList.toggle('menu-active')
+}
+
+// document.addEventListener('click', (event) => {
+//   if (
+//     !event.target.closest('.menu') &&
+//     menu.classList.contains('menu-active')
+//   ) {
+//     menuToggle()
+//   }
+// })

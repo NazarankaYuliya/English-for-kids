@@ -1,33 +1,37 @@
 import { pageContent } from './main.js'
+import { startGame, repeatWord } from './game.js'
 
 export let isGameMode = false
+const mode = document.querySelector('.mode')
+const switchButton = document.querySelector('.switch-input')
 
 export function toggleMode() {
-  const mode = document.querySelector('.mode')
-  const switchButton = document.querySelector('.switch-input')
-
-  if (switchButton.checked) {
-    isGameMode = true
-    mode.textContent = 'Play'
-  } else {
-    isGameMode = false
-    mode.textContent = 'Train'
-  }
+  isGameMode = switchButton.checked
+  mode.textContent = isGameMode ? 'Play' : 'Train'
 }
 
-export function togglePageToPlay() {
-  pageContent
-    .querySelectorAll('.card-image')
-    .forEach((el) => (el.style.height = '100%'))
-  pageContent
-    .querySelectorAll('.card-description')
-    .forEach((el) => (el.style.display = 'none'))
-  pageContent
-    .querySelectorAll('.rotate')
-    .forEach((el) => (el.style.display = 'none'))
+export const startButton = document.createElement('button')
+startButton.className = 'start-game'
 
-  const startButton = document.createElement('button')
-  startButton.className = 'start-game'
+export const stars = document.createElement('div')
+stars.className = 'stars'
+const gameContainer = document.createElement('div')
+gameContainer.className = 'game-container'
+gameContainer.append(stars, startButton)
+
+export function togglePageToPlay() {
+  stars.innerHTML = ''
+  pageContent.prepend(gameContainer)
+
+  const cardImages = pageContent.querySelectorAll('.card-image')
+  const cardDescriptions = pageContent.querySelectorAll('.card-description')
+  const rotateElements = pageContent.querySelectorAll('.rotate')
+
+  cardImages.forEach((el) => (el.style.height = '100%'))
+  cardDescriptions.forEach((el) => (el.style.display = 'none'))
+  rotateElements.forEach((el) => (el.style.display = 'none'))
+
   startButton.textContent = 'Start game'
-  pageContent.append(startButton)
+  startButton.removeEventListener('click', repeatWord)
+  startButton.addEventListener('click', startGame)
 }

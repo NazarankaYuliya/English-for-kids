@@ -5,11 +5,14 @@ export const pageContent = document.querySelector('.page-content')
 export const categories = cards[0]
 const pageTitle = document.querySelector('.page-title')
 
+export const CARD_PATH = '../data/'
+const ROTATE_IMAGE_PATH = '../data/img/rotate.svg'
+
 class Category {
   constructor(categoryName, id) {
     this.id = id + 1
     this.categoryName = categoryName
-    this.image = './data/' + cards[id + 1][0].image
+    this.image = `${CARD_PATH}${cards[this.id][0].image}`
   }
 }
 
@@ -17,8 +20,8 @@ class Card {
   constructor(word, translation, image, audioSrc) {
     this.word = word
     this.translation = translation
-    this.image = '../data/' + image
-    this.audioSrc = '../data/' + audioSrc
+    this.image = `${CARD_PATH}${image}`
+    this.audioSrc = `${CARD_PATH}${audioSrc}`
   }
 }
 
@@ -68,10 +71,9 @@ export function generateCards(id) {
             </div>
             <div class="card-description">
                 <h4>${el.word}</h4>
-                <img class='rotate' src='../data/img/rotate.svg' alt='rotate' width='20px'>
+                <img class='rotate' src='${ROTATE_IMAGE_PATH}' alt='rotate' width='20px'>
             </div>
         </div>
-
         <div class="back">
             <div class="card-image">
                 <img src='${el.image}' alt='${el.word}'>

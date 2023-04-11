@@ -19,26 +19,28 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   background-color: #f79e02;
 }
 
 .header-title {
-  font-size: 60px;
+  font-size: 50px;
   color: #ffffff;
   cursor: pointer;
 }
 
 .burger-icon {
   z-index: 2;
+  width: 50px;
+  height: 50px;
 }
 
 .menu {
   position: absolute;
   z-index: 1;
   top: 0;
-  left: -350px;
-  width: 350px;
+  left: -320px;
+  width: 320px;
   height: 100vh;
   padding: 100px 20px;
   background-color: #f79e02;
@@ -52,7 +54,7 @@ body {
 
 .menu-item {
   padding: 10px;
-  font-size: 36px;
+  font-size: 30px;
   color: #ffffff;
   cursor: pointer;
 }
@@ -166,6 +168,10 @@ body {
   cursor: pointer;
 }
 
+.inactive {
+  opacity: 0.5;
+}
+
 .card-image,
 .category-image {
   width: 100%;
@@ -176,7 +182,8 @@ body {
 .category-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 10px;
+  object-fit: contain;
 }
 
 .card-description {
@@ -215,10 +222,55 @@ body {
   transform: perspective(800px) rotateY(-180deg);
 }
 
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
 .start-game {
   width: 250px;
   height: 50px;
   background-color: #f79e02;
   color: #ffffff;
   font-size: 24px;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+}
+
+.star-win {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 10px;
+  background-size: 100%;
+  background-image: url(./data/img/star-win.svg);
+}
+
+.star {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  background-size: 100%;
+  background-image: url(./data/img/star.svg);
+}
+
+.success img,
+.failure img {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    display: none;
+  }
 }
