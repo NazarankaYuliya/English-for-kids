@@ -1,5 +1,5 @@
 import { categories, generateCards, generateCategory } from './main.js'
-import { generateStatistics } from './statistics.js'
+import { generateStatistics, createStatItems } from './statistics.js'
 
 const menu = document.querySelector('.menu')
 
@@ -35,6 +35,7 @@ export function addNav() {
 
       case 'Statistics':
         generateStatistics()
+        createStatItems()
         menuToggle()
         break
       default:
@@ -50,12 +51,3 @@ export function addNav() {
 function menuToggle() {
   menu.classList.toggle('menu-active')
 }
-
-// document.addEventListener('click', (event) => {
-//   if (
-//     !event.target.closest('.menu') &&
-//     menu.classList.contains('menu-active')
-//   ) {
-//     menuToggle()
-//   }
-// })
