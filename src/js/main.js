@@ -1,12 +1,13 @@
 import { cards } from '../data/cards.js'
 import { isGameMode, toggleMode, togglePageToPlay } from './mode.js'
+import { setLocalStorage, wordStats } from './statistics'
 
 export const pageContent = document.querySelector('.page-content')
 export const categories = cards[0]
-const pageTitle = document.querySelector('.page-title')
+export const pageTitle = document.querySelector('.page-title')
 
-export const CARD_PATH = '../data/'
-const ROTATE_IMAGE_PATH = '../data/img/rotate.svg'
+export const CARD_PATH = './data/'
+const ROTATE_IMAGE_PATH = './data/img/rotate.svg'
 
 class Category {
   constructor(categoryName, id) {
@@ -125,7 +126,14 @@ document.addEventListener('click', function (event) {
   }
   if (event.target.closest('.front') && !isGameMode) {
     playAudio(event)
+
+    const front = event.target.closest('.front')
+    const word = front.querySelector('h4').textContent
+
+    wordStats[word].clicks++
+    setLocalStorage()
   }
+
   if (event.target.closest('.rotate')) {
     flipCard()
   }

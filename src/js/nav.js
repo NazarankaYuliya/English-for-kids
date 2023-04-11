@@ -1,11 +1,12 @@
 import { categories, generateCards, generateCategory } from './main.js'
+import { generateStatistics } from './statistics.js'
 
 const menu = document.querySelector('.menu')
 
 export function addNav() {
   const menu_list = document.querySelector('.menu-list')
   const burger_icon = document.querySelector('.burger-icon')
-  burger_icon.src = '../data/img/burger-icon.png'
+  burger_icon.src = './data/img/burger-icon.png'
   const menu_item_main = document.createElement('li')
   menu_item_main.textContent = 'Main page'
   menu_item_main.classList.add('menu_item_main', 'menu-item')
@@ -18,12 +19,22 @@ export function addNav() {
     menu_list.append(menu_item)
   })
 
+  const menu_item_stat = document.createElement('li')
+  menu_item_stat.textContent = 'Statistics'
+  menu_item_stat.classList.add('menu_item_stat', 'menu-item')
+  menu_list.append(menu_item_stat)
+
   menu.addEventListener('click', (event) => {
     const targ = event.target.closest('li').textContent
 
     switch (targ) {
       case 'Main page':
         generateCategory()
+        menuToggle()
+        break
+
+      case 'Statistics':
+        generateStatistics()
         menuToggle()
         break
       default:

@@ -1,12 +1,13 @@
 import { generateCategory, pageContent } from './main'
 import { startButton, stars } from './mode.js'
+import { wordStats, setLocalStorage } from './statistics'
 
-const errorAudio = new Audio('../data/audio/error.mp3')
-const correctAudio = new Audio('../data/audio/correct.mp3')
-const successAudio = new Audio('../data/audio/success.mp3')
-const failureAudio = new Audio('../data/audio/failure.mp3')
+const errorAudio = new Audio('./data/audio/error.mp3')
+const correctAudio = new Audio('./data/audio/correct.mp3')
+const successAudio = new Audio('./data/audio/success.mp3')
+const failureAudio = new Audio('./data/audio/failure.mp3')
 
-const IMAGE_PATH = '../data/img/'
+const IMAGE_PATH = './data/img/'
 
 let currentIndex = 0
 let correctGuesses = 0
@@ -65,6 +66,9 @@ function checkGuess(event) {
     card.classList.add('inactive')
     card.removeEventListener('click', checkGuess)
 
+    wordStats[word].guesses++
+    setLocalStorage()
+
     currentIndex++
     correctGuesses++
 
@@ -98,6 +102,10 @@ function checkGuess(event) {
   } else {
     errorAudio.play()
     wrongGuesses++
+
+    wordStats[word].mistakes++
+    setLocalStorage()
+
     const star = document.createElement('span')
     star.classList.add('star')
     addStar('star')
