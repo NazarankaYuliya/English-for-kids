@@ -7,7 +7,7 @@ const correctAudio = new Audio('./data/audio/correct.mp3')
 const successAudio = new Audio('./data/audio/success.mp3')
 const failureAudio = new Audio('./data/audio/failure.mp3')
 
-const IMAGE_PATH = 'dist/data/img/'
+const IMAGE_PATH = './data/img/'
 
 let currentIndex = 0
 let correctGuesses = 0
