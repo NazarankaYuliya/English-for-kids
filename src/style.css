@@ -269,25 +269,17 @@ body {
   width: 100%;
 }
 
-@media (max-width: 768px) {
-  .header-title {
-    display: none;
-  }
-}
-
-.score-item {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
 .stat {
   width: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  text-align: center;
+  row-gap: 30px;
+}
+
+.table-container {
+  width: 100%;
+  overflow: scroll;
 }
 
 .table {
@@ -337,6 +329,15 @@ td:nth-child(6) {
   display: flex;
   justify-content: center;
   column-gap: 20px;
-  margin-bottom: 30px;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    display: none;
+  }
+  .stat-buttons {
+    flex-direction: column;
+    row-gap: 20px;
+  }
 }

@@ -50,9 +50,15 @@ export function generateStatistics() {
 
   statButtons.append(repeatDiff)
   statButtons.append(statReset)
+
   const table = document.createElement('table')
   table.classList.add('table')
-  statistics.append(table)
+
+  const tableContainer = document.createElement('div')
+  tableContainer.classList.add('table-container')
+
+  tableContainer.append(table)
+  statistics.append(tableContainer)
   const tableHead = document.createElement('thead')
   table.append(tableHead)
   tableHead.innerHTML = `
