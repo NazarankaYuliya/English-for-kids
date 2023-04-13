@@ -1,6 +1,7 @@
 import { generateCategory, pageContent } from './main'
 import { startButton, stars } from './mode.js'
-import { wordStats, setLocalStorage } from './statistics'
+import { wordStats } from './statistics.js'
+import { updateLocalStorage, setLocalStorage } from './localStorage.js'
 
 const errorAudio = new Audio('./data/audio/error.mp3')
 const correctAudio = new Audio('./data/audio/correct.mp3')
@@ -21,7 +22,7 @@ export function startGame() {
   let isFirstClick = true
 
   if (isFirstClick) {
-    startButton.innerText = 'Repeat'
+    startButton.innerText = 'REPEAT'
     startButton.removeEventListener('click', startGame)
     startButton.addEventListener('click', repeatWord)
     isFirstClick = false
@@ -66,6 +67,7 @@ function checkGuess(event) {
     card.classList.add('inactive')
     card.removeEventListener('click', checkGuess)
 
+    updateLocalStorage()
     wordStats[word].guesses++
     setLocalStorage()
 
@@ -83,16 +85,16 @@ function checkGuess(event) {
         successAudio.play()
         pageContent.innerHTML = `
         <div class="success">
-            <img src="${IMAGE_PATH}success.jpg">
-            <p>Awesome job! You guessed all the words!</p>
+            <img src="${IMAGE_PATH}success.jpeg">
+            <p class='game-over'>Awesome job! You guessed all the words!</p>
         </div>`
       } else {
         failureAudio.play()
 
         pageContent.innerHTML = `
         <div class="failure">
-            <img src="${IMAGE_PATH}failure.jpg">
-            <p> You made ${wrongGuesses} mistakes.</p>
+            <img src="${IMAGE_PATH}failure.jpeg">
+            <p class='game-over'> You made ${wrongGuesses} mistakes.</p>
         </div>`
       }
       setTimeout(() => {
@@ -102,7 +104,7 @@ function checkGuess(event) {
   } else {
     errorAudio.play()
     wrongGuesses++
-
+    updateLocalStorage()
     wordStats[word].mistakes++
     setLocalStorage()
 

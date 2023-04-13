@@ -1,28 +1,21 @@
 import { cards } from '../data/cards.js'
+import { generateCards } from './Card.js'
 import { isGameMode, toggleMode, togglePageToPlay } from './mode.js'
-import { setLocalStorage, wordStats } from './statistics'
+import { wordStats, repeatDifficultWords } from './statistics.js'
+import { updateLocalStorage, setLocalStorage } from './localStorage.js'
 
 export const pageContent = document.querySelector('.page-content')
 export const categories = cards[0]
 export const pageTitle = document.querySelector('.page-title')
 
 export const CARD_PATH = './data/'
-const ROTATE_IMAGE_PATH = './data/img/rotate.svg'
+export const ROTATE_IMAGE_PATH = './data/img/rotate.svg'
 
 class Category {
   constructor(categoryName, id) {
     this.id = id + 1
     this.categoryName = categoryName
     this.image = `${CARD_PATH}${cards[this.id][0].image}`
-  }
-}
-
-class Card {
-  constructor(word, translation, image, audioSrc) {
-    this.word = word
-    this.translation = translation
-    this.image = `${CARD_PATH}${image}`
-    this.audioSrc = `${CARD_PATH}${audioSrc}`
   }
 }
 
@@ -51,52 +44,9 @@ export function generateCategory() {
   })
 }
 
-export function generateCards(id) {
-  pageContent.innerHTML = ''
-  pageContent.id = id
-  pageTitle.textContent = categories[id - 1]
-
-  cards[id].forEach((el, index) => {
-    el = new Card(el.word, el.translation, el.image, el.audioSrc)
-
-    const card = document.createElement('div')
-    card.className = 'card'
-    card.id = index + 1
-
-    card.insertAdjacentHTML(
-      'afterbegin',
-      `
-        <div class="front">
-            <div class="card-image">
-                <img src='${el.image}' alt='${el.word}'>
-            </div>
-            <div class="card-description">
-                <h4>${el.word}</h4>
-                <img class='rotate' src='${ROTATE_IMAGE_PATH}' alt='rotate' width='20px'>
-            </div>
-        </div>
-        <div class="back">
-            <div class="card-image">
-                <img src='${el.image}' alt='${el.word}'>
-            </div>
-            <div class="card-description">
-                <h4>${el.translation}</h4>
-            </div>
-        </div>
-        <audio class='card-audio audio${card.id}' src='${el.audioSrc}'></audio>
-    `
-    )
-
-    pageContent.append(card)
-  })
-  if (isGameMode) {
-    togglePageToPlay()
-  }
-}
-
 function playAudio(event) {
   const target = event.target.closest('.card')
-  const audioSrc = document.querySelector(`.audio${target.id}`).src
+  const audioSrc = target.querySelector('audio').src
   const audio = new Audio(audioSrc)
   audio.play()
 }
@@ -130,6 +80,7 @@ document.addEventListener('click', function (event) {
     const front = event.target.closest('.front')
     const word = front.querySelector('h4').textContent
 
+    updateLocalStorage()
     wordStats[word].clicks++
     setLocalStorage()
   }
@@ -145,5 +96,9 @@ document.addEventListener('click', function (event) {
     if (pageContent.id > 0) {
       generateCards(pageContent.id)
     }
+  }
+
+  if (event.target.closest('.stat-repeat')) {
+    repeatDifficultWords()
   }
 })

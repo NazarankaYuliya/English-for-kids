@@ -31,7 +31,7 @@ export function togglePageToPlay() {
   cardDescriptions.forEach((el) => (el.style.display = 'none'))
   rotateElements.forEach((el) => (el.style.display = 'none'))
 
-  startButton.textContent = 'Start game'
+  startButton.textContent = 'START'
   startButton.removeEventListener('click', repeatWord)
   startButton.addEventListener('click', startGame)
 }
