@@ -59,5 +59,4 @@ export function addNav() {
 function menuToggle() {
   menu.classList.toggle('menu-active')
   burger_icon.classList.toggle('burger-icon-rotate')
-  document.body.classList.toggle('stop-scrolling')
 }

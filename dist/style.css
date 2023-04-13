@@ -76,10 +76,6 @@ body {
   background-color: #f9d6d2;
 }
 
-.stop-scrolling {
-  height: 100%;
-  overflow: hidden;
-}
 /*   ---  mode / switch  ----  */
 
 .switch {
