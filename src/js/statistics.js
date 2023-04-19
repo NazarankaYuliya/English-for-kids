@@ -1,203 +1,209 @@
-import { pageContent, pageTitle } from './main.js'
-import { Card } from './Card.js'
-import { createStatItems } from './statItem.js'
-import { setLocalStorage } from './localStorage.js'
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-param-reassign */
+import Card from './card';
+import createStatItems from './statItem';
+import { setLocalStorage, wordStats } from './localStorage';
 
-export const wordStats = {}
+const pageContent = document.querySelector('.page-content');
+const pageTitle = document.querySelector('.page-title');
 
-export function generateStatistics() {
-  pageTitle.textContent = 'Statistics'
-  pageContent.innerHTML = ''
-  const statistics = document.createElement('div')
-  statistics.classList.add('stat')
+function createStatsCotainer() {
+  const statsContainer = document.createElement('div');
+  statsContainer.classList.add('stats-container');
 
-  pageContent.append(statistics)
+  const statsHeader = document.createElement('div');
+  statsHeader.classList.add('stats-header');
 
-  const statButtons = document.createElement('div')
-  statButtons.classList.add('stat-buttons')
-  statistics.append(statButtons)
-  const repeatDiff = document.createElement('button')
-  repeatDiff.classList.add('stat-repeat', 'btn', 'btn-info')
-  repeatDiff.textContent = 'Repeat difficult words'
-  const statReset = document.createElement('button')
-  statReset.classList.add('stat-reset', 'btn', 'btn-info')
-  statReset.textContent = 'Reset'
-  statReset.addEventListener('click', resetStatistics)
+  const statsRowHeader = document.createElement('div');
+  statsRowHeader.classList.add('stats-row');
+  statsRowHeader.innerHTML = `
+    <div class="stats-item stats-item-word">En <span class="sort-indicator">&#x25B2</span></div>
+    <div class="stats-item stats-item-clicks">Clicks </div>
+    <div class="stats-item stats-item-translation">Ru</div>
+    <div class="stats-item stats-item-guesses">Right</div>
+    <div class="stats-item stats-item-mistakes">Wrong </div>
+    <div class="stats-item stats-item-percentage">%</div>
+    <div class="stats-item stats-item-category">Group</div>
+  `;
 
-  statButtons.append(repeatDiff)
-  statButtons.append(statReset)
+  const statsBody = document.createElement('div');
+  statsBody.classList.add('stats-body');
 
-  const table = document.createElement('table')
-  table.classList.add('table')
+  statsHeader.append(statsRowHeader);
+  statsContainer.append(statsHeader, statsBody);
 
-  const tableContainer = document.createElement('div')
-  tableContainer.classList.add('table-container')
-
-  tableContainer.append(table)
-  statistics.append(tableContainer)
-  const tableHead = document.createElement('thead')
-  table.append(tableHead)
-  tableHead.innerHTML = `
-  <tr>
-    <th scope="col" data-column="word" data-direction="asc">Word</th>
-    <th scope="col" data-column="clicks" data-direction="asc">Clicked</th>
-    <th scope="col" data-column="translation" data-direction="asc">Translation</th>
-    <th scope="col" data-column="guesses" data-direction="asc">Correct</th>
-    <th scope="col" data-column="mistakes" data-direction="asc">Wrong</th>
-    <th scope="col" data-column="percentage" data-direction="asc">%</th>
-    <th scope="col" data-column="category" data-direction="asc">Category</th>
-  </tr>`
-
-  tableHead.addEventListener('click', (event) => {
-    const header = event.target.closest('th')
-    if (!header) return
-    const column = header.dataset.column
-    const direction = header.dataset.direction
-    sortStatistics(column, direction)
-  })
-
-  const tableBody = document.createElement('tbody')
-  table.append(tableBody)
-
-  generateStatisticsRow()
+  return statsContainer;
 }
 
-function generateStatisticsRow() {
-  const statArr = JSON.parse(localStorage.getItem('statistics')) || {}
-
-  for (const word in statArr) {
-    const arr = statArr[word]
-    const row = document.createElement('tr')
-
-    let cell = document.createElement('td')
-    cell.dataset.column = 'word'
-    cell.dataset.value = arr.word
-    cell.textContent = arr.word
-    row.append(cell)
-
-    cell = document.createElement('td')
-    cell.dataset.column = 'clicks'
-    cell.dataset.value = arr.clicks
-    cell.textContent = arr.clicks
-    row.append(cell)
-
-    cell = document.createElement('td')
-    cell.dataset.column = 'translation'
-    cell.dataset.value = arr.translation
-    cell.textContent = arr.translation
-    row.append(cell)
-
-    cell = document.createElement('td')
-    cell.dataset.column = 'guesses'
-    cell.dataset.value = arr.guesses
-    cell.textContent = arr.guesses
-    row.append(cell)
-
-    cell = document.createElement('td')
-    cell.dataset.column = 'mistakes'
-    cell.dataset.value = arr.mistakes
-    cell.textContent = arr.mistakes
-    row.append(cell)
-
-    cell = document.createElement('td')
-    cell.dataset.column = 'percentage'
-    cell.dataset.value = arr.percentage
-
-    cell.textContent = isNaN((100 * arr.guesses) / (arr.mistakes + arr.guesses))
-      ? '0'
-      : Math.ceil((100 * arr.guesses) / (arr.mistakes + arr.guesses))
-    row.append(cell)
-
-    cell = document.createElement('td')
-    cell.dataset.column = 'category'
-    cell.dataset.value = arr.category
-    cell.textContent = arr.category
-    row.append(cell)
-
-    const tableBody = document.querySelector('tbody')
-    tableBody.append(row)
-  }
+function createStatsItem(itemValue, itemClass) {
+  const statsItem = document.createElement('div');
+  statsItem.classList.add('stats-item', itemClass);
+  statsItem.textContent = itemValue || '0';
+  return statsItem;
 }
 
-function resetStatistics() {
-  for (const word in wordStats) {
-    wordStats[word].clicks = 0
-    wordStats[word].guesses = 0
-    wordStats[word].mistakes = 0
-  }
-  createStatItems()
-  setLocalStorage()
-  generateStatistics()
+function createStatsRow() {
+  const statArr = JSON.parse(localStorage.getItem('statistics')) || {};
+
+  const statsBody = document.querySelector('.stats-body');
+  const fragment = new DocumentFragment();
+
+  Object.entries(statArr).forEach(([word, stat]) => {
+    const statRow = document.createElement('div');
+    statRow.className = 'stats-row';
+
+    statRow.append(
+      createStatsItem(word, 'stats-item-word'),
+      createStatsItem(stat.clicks ?? 0, 'stats-item-clicks'),
+      createStatsItem(stat.translation, 'stats-item-translation'),
+      createStatsItem(stat.guesses ?? 0, 'stats-item-guesses'),
+      createStatsItem(stat.mistakes ?? 0, 'stats-item-mistakes'),
+      createStatsItem(
+        (stat.guesses ?? 0) + (stat.mistakes ?? 0) > 0
+          ? `${Math.round(
+              (stat.guesses / (stat.guesses + stat.mistakes)) * 100
+            )}`
+          : '0',
+        'stats-item-percentage'
+      ),
+      createStatsItem(stat.category, 'stats-item-category')
+    );
+
+    fragment.append(statRow);
+  });
+
+  statsBody.append(fragment);
 }
 
-function getCellValue(cell) {
-  let value = cell.dataset.value || cell.textContent.trim()
-  if (!isNaN(value)) {
-    value = Number(value)
-  }
-  return value
+function createStatsButtons() {
+  const statsButtons = document.createElement('div');
+  statsButtons.classList.add('stats-buttons');
+
+  const statsRepeat = document.createElement('button');
+  statsRepeat.classList.add('stats-repeat', 'btn');
+  statsRepeat.textContent = 'Repeat difficult words';
+
+  const statsReset = document.createElement('button');
+  statsReset.classList.add('stats-reset', 'btn');
+  statsReset.textContent = 'Reset';
+
+  statsButtons.append(statsRepeat, statsReset);
+
+  return statsButtons;
 }
 
-function sortRows(rows, column, direction) {
-  return rows.sort((rowA, rowB) => {
-    const cellA = rowA.querySelector(`td[data-column="${column}"]`)
-    const cellB = rowB.querySelector(`td[data-column="${column}"]`)
-    const valueA = getCellValue(cellA)
-    const valueB = getCellValue(cellB)
-    if (valueA < valueB) {
-      return direction === 'asc' ? -1 : 1
-    } else if (valueA > valueB) {
-      return direction === 'asc' ? 1 : -1
-    } else {
-      return 0
+function createStatsWrapper() {
+  const statsWrapper = document.createElement('div');
+  statsWrapper.classList.add('stats');
+
+  const statsButtons = createStatsButtons();
+  const statsContainer = createStatsCotainer();
+
+  statsWrapper.append(statsButtons, statsContainer);
+  pageContent.append(statsWrapper);
+}
+
+function sortStatistics(column, ascending) {
+  const statsBody = document.querySelector('.stats-body');
+  const rows = Array.from(statsBody.children);
+  const sortType =
+    column === 'word' || column === 'translation' || column === 'category'
+      ? 'text'
+      : 'number';
+
+  rows.sort((rowA, rowB) => {
+    const valueA = rowA.querySelector(`.stats-item-${column}`).textContent;
+    const valueB = rowB.querySelector(`.stats-item-${column}`).textContent;
+    let comparison = 0;
+
+    if (sortType === 'text') {
+      comparison = valueA.localeCompare(valueB);
+    } else if (sortType === 'number') {
+      comparison = Number(valueA) - Number(valueB);
     }
-  })
+
+    return ascending ? comparison : -comparison;
+  });
+
+  statsBody.innerHTML = '';
+  rows.forEach((row) => statsBody.appendChild(row));
 }
 
-function updateTable(tableBody, rows) {
-  tableBody.innerHTML = ''
-  rows.forEach((row) => tableBody.appendChild(row))
-}
-
-function updateHeader(header, direction) {
-  header.dataset.direction = direction === 'asc' ? 'desc' : 'asc'
-}
-
-function sortStatistics(column, direction) {
-  const tableBody = document.querySelector('tbody')
-  const rows = Array.from(tableBody.querySelectorAll('tr'))
-  const sortedRows = sortRows(rows, column, direction)
-  updateTable(tableBody, sortedRows)
-  const header = document.querySelector(`th[data-column="${column}"]`)
-  updateHeader(header, direction)
-}
-
-export function repeatDifficultWords() {
+function repeatDifficultWords() {
   const sortedWords = Object.entries(wordStats).sort(
     (a, b) => b[1].mistakes - a[1].mistakes
-  )
-  const numWordsToRepeat = 8
-  const minMistakes = 1
+  );
+  const numWordsToRepeat = 8;
+  const minMistakes = 1;
 
   const wordsToRepeat = sortedWords
     .slice(0, numWordsToRepeat)
-    .filter(([word, current]) => current.mistakes >= minMistakes)
+    .filter(([, current]) => current.mistakes >= minMistakes);
 
-  if (wordsToRepeat.length > 0) {
-    const cards = wordsToRepeat.map(([word, current]) =>
-      new Card(
-        current.word,
-        current.translation,
-        current.image,
-        current.audioSrc
-      ).generateHTML()
-    )
-    const cardsHTML = cards.join('')
+  const cardsHTML = wordsToRepeat.length
+    ? wordsToRepeat
+        .map(([, current]) => new Card({ ...current }).generateCardHTML())
+        .join('')
+    : '<p>No words to repeat.</p>';
 
-    pageContent.innerHTML = cardsHTML
-    pageTitle.textContent = 'Repeat'
-  } else {
-    pageContent.innerHTML = '<p>No words to repeat.</p>'
-    pageTitle.textContent = 'Repeat'
-  }
+  pageContent.innerHTML = cardsHTML;
+  pageTitle.textContent = 'Repeat';
+}
+
+function resetStatistics() {
+  Object.keys(wordStats).forEach((word) => {
+    wordStats[word].clicks = 0;
+    wordStats[word].guesses = 0;
+    wordStats[word].mistakes = 0;
+  });
+  createStatItems();
+  setLocalStorage('statistics', wordStats);
+  generateStatistics();
+}
+
+function addListeners() {
+  const statsButtons = document.querySelector('.stats-buttons');
+
+  statsButtons.addEventListener('click', (e) => {
+    const repeat = e.target.closest('.stats-repeat');
+    const reset = e.target.closest('.stats-reset');
+
+    // const wordStats = getLocalStorage('statistics');
+
+    if (repeat) repeatDifficultWords();
+    if (reset) resetStatistics();
+  });
+
+  const statsHeader = document.querySelector('.stats-header');
+
+  statsHeader.addEventListener('click', (e) => {
+    const headerCell = e.target.closest('.stats-item');
+    if (!headerCell) return;
+
+    const column = headerCell.classList[1].replace('stats-item-', '');
+    const isAscending = headerCell.classList.contains('asc');
+
+    sortStatistics(column, !isAscending);
+
+    const sortIndicator = statsHeader.querySelector('.sort-indicator');
+    if (sortIndicator) sortIndicator.remove();
+    headerCell.classList.toggle('asc');
+    headerCell.insertAdjacentHTML(
+      'beforeend',
+      `
+      <span class="sort-indicator">
+        ${isAscending ? '&#x25B2;' : '&#x25BC;'}
+      </span>
+    `
+    );
+  });
+}
+
+export default function generateStatistics() {
+  pageTitle.textContent = 'Statistics';
+  pageContent.innerHTML = '';
+
+  createStatsWrapper();
+  createStatsRow();
+  addListeners();
 }

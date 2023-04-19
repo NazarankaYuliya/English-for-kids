@@ -287,7 +287,7 @@ const cards = [
     },
     {
       word: 'Laugh',
-      translation: 'Cмех',
+      translation: 'Смех',
       image: 'img/laugh.jpeg',
       audioSrc: 'audio/laugh.mp3',
     },
@@ -410,6 +410,6 @@ const cards = [
       audioSrc: 'audio/helicopter.mp3',
     },
   ],
-]
+];
 
-export { cards }
+export default cards;

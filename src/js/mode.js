@@ -1,37 +1,46 @@
-import { pageContent } from './main.js'
-import { startGame, repeatWord } from './game.js'
+/* eslint-disable no-param-reassign */
+import { startGame, repeatWord } from './game';
 
-export let isGameMode = false
-const mode = document.querySelector('.mode')
-const switchButton = document.querySelector('.switch-input')
+const mode = document.querySelector('.mode');
 
-export function toggleMode() {
-  isGameMode = switchButton.checked
-  mode.textContent = isGameMode ? 'Play' : 'Train'
+export function toggleMode(isGameMode) {
+  mode.textContent = isGameMode ? 'Play' : 'Train';
 }
 
-export const startButton = document.createElement('button')
-startButton.className = 'start-game'
+function createGameContainer(pageContent) {
+  const startButton = document.createElement('button');
+  startButton.className = 'start-game';
+  startButton.innerText = 'START';
 
-export const stars = document.createElement('div')
-stars.className = 'stars'
-const gameContainer = document.createElement('div')
-gameContainer.className = 'game-container'
-gameContainer.append(stars, startButton)
+  const stars = document.createElement('div');
+  stars.className = 'stars';
+  stars.innerHTML = '';
 
-export function togglePageToPlay() {
-  stars.innerHTML = ''
-  pageContent.prepend(gameContainer)
+  const gameContainer = document.createElement('div');
+  gameContainer.className = 'game-container';
+  gameContainer.append(stars, startButton);
 
-  const cardImages = pageContent.querySelectorAll('.card-image')
-  const cardDescriptions = pageContent.querySelectorAll('.card-description')
-  const rotateElements = pageContent.querySelectorAll('.rotate')
+  startButton.textContent = 'START';
+  startButton.removeEventListener('click', repeatWord);
+  startButton.addEventListener('click', startGame);
 
-  cardImages.forEach((el) => (el.style.height = '100%'))
-  cardDescriptions.forEach((el) => (el.style.display = 'none'))
-  rotateElements.forEach((el) => (el.style.display = 'none'))
+  pageContent.prepend(gameContainer);
+}
 
-  startButton.textContent = 'START'
-  startButton.removeEventListener('click', repeatWord)
-  startButton.addEventListener('click', startGame)
+export function togglePageToPlay(pageContent) {
+  createGameContainer(pageContent);
+
+  const cardImages = pageContent.querySelectorAll('.card-image');
+  const cardDescriptions = pageContent.querySelectorAll('.card-description');
+  const rotateElements = pageContent.querySelectorAll('.rotate');
+
+  cardImages.forEach((el) => {
+    el.style.height = '100%';
+  });
+  cardDescriptions.forEach((el) => {
+    el.style.display = 'none';
+  });
+  rotateElements.forEach((el) => {
+    el.style.display = 'none';
+  });
 }

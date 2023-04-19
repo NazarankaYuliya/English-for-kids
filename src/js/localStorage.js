@@ -1,12 +1,12 @@
-import { wordStats } from './statistics'
+export const wordStats = {};
 
-export function updateLocalStorage() {
-  const savedStats = localStorage.getItem('statistics')
-  if (savedStats) {
-    Object.assign(wordStats, JSON.parse(savedStats))
-  }
+export function setLocalStorage(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
 }
 
-export function setLocalStorage() {
-  localStorage.setItem('statistics', JSON.stringify(wordStats))
+export function updateLocalStorage(key, data) {
+  const savedStats = localStorage.getItem(key);
+  if (savedStats) {
+    Object.assign(data, JSON.parse(savedStats));
+  }
 }
