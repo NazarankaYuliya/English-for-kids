@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import { generateCategory } from './main';
 import { setLocalStorage, updateLocalStorage, wordStats } from './localStorage';
 

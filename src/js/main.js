@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import cards from '../data/cards';
 import Card from './card';
 import { toggleMode, togglePageToPlay } from './mode';
@@ -14,7 +13,7 @@ let isGameMode;
 export function generateCategory() {
   pageContent.innerHTML = '';
   pageContent.id = 0;
-  pageTitle.textContent = 'Main';
+  pageTitle.textContent = 'Choose a category to study';
 
   categories.forEach((category, index) => {
     category = new Card({ categoryName: category, id: index });
@@ -80,6 +79,15 @@ function handleSwitchButton() {
   }
 }
 
+function handleClicks(event) {
+  const front = event.target.closest('.front');
+  const word = front.querySelector('h4').textContent;
+
+  updateLocalStorage('statistics', wordStats);
+  wordStats[word].clicks += 1;
+  setLocalStorage('statistics', wordStats);
+}
+
 document.addEventListener('click', (event) => {
   if (event.target.closest('.category-card')) {
     const target = event.target.closest('.category-card');
@@ -88,14 +96,7 @@ document.addEventListener('click', (event) => {
 
   if (event.target.closest('.front') && !isGameMode) {
     playAudio(event);
-
-    const front = event.target.closest('.front');
-    const word = front.querySelector('h4').textContent;
-
-    // updateStats(wordStats, word, 'clicks');
-    updateLocalStorage('statistics', wordStats);
-    wordStats[word].clicks += 1;
-    setLocalStorage('statistics', wordStats);
+    handleClicks(event);
   }
 
   if (event.target.closest('.rotate')) {

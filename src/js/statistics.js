@@ -1,5 +1,3 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-param-reassign */
 import Card from './card';
 import createStatItems from './statItem';
 import { setLocalStorage, wordStats } from './localStorage';
@@ -167,8 +165,6 @@ function addListeners() {
   statsButtons.addEventListener('click', (e) => {
     const repeat = e.target.closest('.stats-repeat');
     const reset = e.target.closest('.stats-reset');
-
-    // const wordStats = getLocalStorage('statistics');
 
     if (repeat) repeatDifficultWords();
     if (reset) resetStatistics();

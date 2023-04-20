@@ -1,7 +1,7 @@
 {
   "name": "english-for-kids",
   "version": "1.0.0",
-  "description": "",
+  "description": "My webpack project",
   "main": "index.js",
   "scripts": {
     "build": "webpack --node-env=production",

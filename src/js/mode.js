@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { startGame, repeatWord } from './game';
 
 const mode = document.querySelector('.mode');

@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import cards from '../data/cards';
 import { wordStats } from './localStorage';
 
